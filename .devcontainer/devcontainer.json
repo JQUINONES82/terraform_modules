@@ -1,0 +1,19 @@
+{
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "amazonwebservices.aws-toolkit-vscode",
+        "Bridgecrew.checkov",
+        "hashicorp.hcl",
+        "hashicorp.terraform",
+        "ms-vscode.makefile-tools",
+        "SimonSiefke.svg-preview"
+      ],
+      "settings": {
+        "editor.formatOnSave": true
+      }
+    }
+  },
+  "image": "bananalab/devcontainer",
+  "remoteUser": "devcontainer"
+}
