@@ -161,3 +161,193 @@ variable "replication_token" {
   EOT
   default     = null
 }
+
+variable "lifecycle_rules" {
+  type = list(object({
+    id     = string
+    status = string
+    filter = optional(object({
+      prefix                   = optional(string)
+      object_size_greater_than = optional(number)
+      object_size_less_than    = optional(number)
+      tags                     = optional(map(string))
+    }))
+    expiration = optional(object({
+      days                         = optional(number)
+      date                         = optional(string)
+      expired_object_delete_marker = optional(bool)
+    }))
+    noncurrent_version_expiration = optional(object({
+      noncurrent_days           = optional(number)
+      newer_noncurrent_versions = optional(number)
+    }))
+    transitions = optional(list(object({
+      days          = optional(number)
+      date          = optional(string)
+      storage_class = string
+    })))
+    noncurrent_version_transitions = optional(list(object({
+      noncurrent_days           = number
+      newer_noncurrent_versions = optional(number)
+      storage_class             = string
+    })))
+    abort_incomplete_multipart_upload = optional(object({
+      days_after_initiation = number
+    }))
+  }))
+  description = <<-EOT
+    List of lifecycle rules for the bucket
+  EOT
+  default     = []
+}
+
+variable "cors_rules" {
+  type = list(object({
+    id              = optional(string)
+    allowed_headers = optional(list(string))
+    allowed_methods = list(string)
+    allowed_origins = list(string)
+    expose_headers  = optional(list(string))
+    max_age_seconds = optional(number)
+  }))
+  description = <<-EOT
+    List of CORS rules for the bucket
+  EOT
+  default     = []
+}
+
+variable "website_configuration" {
+  type = object({
+    index_document = optional(object({
+      suffix = string
+    }))
+    error_document = optional(object({
+      key = string
+    }))
+    redirect_all_requests_to = optional(object({
+      host_name = string
+      protocol  = optional(string)
+    }))
+    routing_rules = optional(list(object({
+      condition = optional(object({
+        http_error_code_returned_equals = optional(string)
+        key_prefix_equals               = optional(string)
+      }))
+      redirect = object({
+        host_name               = optional(string)
+        http_redirect_code      = optional(string)
+        protocol                = optional(string)
+        replace_key_prefix_with = optional(string)
+        replace_key_with        = optional(string)
+      })
+    })))
+  })
+  description = <<-EOT
+    Website configuration for the bucket
+  EOT
+  default     = null
+}
+
+variable "notification_configuration" {
+  type = object({
+    sns_topics = optional(list(object({
+      topic_arn     = string
+      events        = list(string)
+      filter_prefix = optional(string)
+      filter_suffix = optional(string)
+    })))
+    sqs_queues = optional(list(object({
+      queue_arn     = string
+      events        = list(string)
+      filter_prefix = optional(string)
+      filter_suffix = optional(string)
+    })))
+    lambda_functions = optional(list(object({
+      lambda_function_arn = string
+      events              = list(string)
+      filter_prefix       = optional(string)
+      filter_suffix       = optional(string)
+    })))
+  })
+  description = <<-EOT
+    Notification configuration for the bucket
+  EOT
+  default     = null
+}
+
+variable "enable_transfer_acceleration" {
+  type        = bool
+  description = <<-EOT
+    Enable transfer acceleration for the bucket
+  EOT
+  default     = false
+}
+
+variable "request_payer" {
+  type        = string
+  description = <<-EOT
+    Specifies who should bear the cost of Amazon S3 data transfer. Valid values: BucketOwner, Requester
+  EOT
+  default     = null
+  validation {
+    condition     = var.request_payer == null || contains(["BucketOwner", "Requester"], var.request_payer)
+    error_message = "request_payer must be either 'BucketOwner' or 'Requester'."
+  }
+}
+
+variable "object_ownership" {
+  type        = string
+  description = <<-EOT
+    Object ownership setting for the bucket. Valid values: BucketOwnerPreferred, ObjectWriter, BucketOwnerEnforced
+  EOT
+  default     = null
+  validation {
+    condition     = var.object_ownership == null || contains(["BucketOwnerPreferred", "ObjectWriter", "BucketOwnerEnforced"], var.object_ownership)
+    error_message = "object_ownership must be one of 'BucketOwnerPreferred', 'ObjectWriter', or 'BucketOwnerEnforced'."
+  }
+}
+
+variable "bucket_policy" {
+  type        = string
+  description = <<-EOT
+    IAM policy document for the bucket
+  EOT
+  default     = null
+}
+
+variable "intelligent_tiering_configurations" {
+  type = map(object({
+    name   = string
+    status = string
+    filter = optional(object({
+      prefix = optional(string)
+      tags   = optional(map(string))
+    }))
+    tiering = list(object({
+      access_tier = string
+      days        = number
+    }))
+  }))
+  description = <<-EOT
+    Map of intelligent tiering configurations
+  EOT
+  default     = {}
+}
+
+variable "timeouts" {
+  type = object({
+    create = optional(string, "20m")
+    read   = optional(string, "20m")
+    update = optional(string, "20m")
+    delete = optional(string, "60m")
+  })
+  description = <<-EOT
+    Configuration options for timeouts.
+    
+    create: Timeout for creating the S3 bucket (default: 20m)
+    read: Timeout for reading the S3 bucket (default: 20m)
+    update: Timeout for updating the S3 bucket (default: 20m)
+    delete: Timeout for deleting the S3 bucket (default: 60m)
+  EOT
+  default     = null
+}

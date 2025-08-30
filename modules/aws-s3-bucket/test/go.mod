@@ -2,7 +2,10 @@ module aws-s3-bucket
 
 go 1.19
 
-require github.com/gruntwork-io/terratest v0.40.19
+require (
+	github.com/gruntwork-io/terratest v0.40.19
+	github.com/stretchr/testify v1.7.2
+)
 
 require (
 	cloud.google.com/go v0.83.0 // indirect

@@ -1,0 +1,52 @@
+Best practice rules for Amazon Bedrock
+Amazon Bedrock Service Role Policy Too Permissive
+Ensure that policies attached to Amazon Bedrock service roles adhere to the Principle of Least Privilege.
+
+Check for Missing Amazon Bedrock Agent Service Role
+Ensure that Amazon Bedrock agents are referencing active (available) service roles.
+
+Check for Missing Model Customization Job Security Groups
+Ensure that Bedrock model customization jobs are referencing active (available) VPC security groups.
+
+Configure Data Deletion Policy for Knowledge Base Data
+Ensure that the vector store data is retained when the knowledge base data sources are deleted.
+
+Configure Permissions Boundaries for IAM Identities used by Amazon Bedrock
+For enhanced security, ensure that permissions boundaries are set for IAM identities used by Amazon Bedrock.
+
+Configure Prompt Attack Strength for Amazon Bedrock Guardrails
+Ensure that prompt attack strength is set to HIGH for Amazon Bedrock guardrails.
+
+Configure Sensitive Information Filters for Amazon Bedrock Guardrails
+Ensure that sensitive information filters are configured for Amazon Bedrock guardrails.
+
+Cross-Service Confused Deputy Prevention
+Ensure that policies attached to Amazon Bedrock service roles are configured to prevent cross-service impersonation.
+
+Enable Model Invocation Logging
+Ensure that model invocation logging is enabled in the Amazon Bedrock account level settings.
+
+Protect Model Customization Jobs using a VPC
+Ensure that Bedrock model customization jobs are protected by a Virtual Private Cloud (VPC).
+
+Use Customer-Managed Keys to Encrypt Agent Sessions
+Ensure that agent session data is encrypted with Amazon KMS Customer Managed Keys (CMKs).
+
+Use Customer-Managed Keys to Encrypt Amazon Bedrock Guardrails
+Ensure that Bedrock guardrails are encrypted with Amazon KMS Customer Managed Keys (CMKs).
+
+Use Customer-Managed Keys to Encrypt Amazon Bedrock Studio Workspaces
+Ensure that Bedrock Studio workspaces are encrypted with Amazon KMS Customer Managed Keys (CMKs).
+
+Use Customer-Managed Keys to Encrypt Custom Models
+Ensure that AWS Bedrock custom models are encrypted with Amazon KMS Customer-Managed Keys (CMKs).
+
+Use Customer-Managed Keys to Encrypt Knowledge Base Transient Data
+Ensure that knowledge base transient data is encrypted with Amazon KMS Customer Managed Keys (CMKs).
+
+Use Guardrails to Protect Agent Sessions
+Ensure that Bedrock agent sessions are associated with guardrails for protection.
+
+
+
+https://www.trendmicro.com/cloudoneconformity/knowledge-base/aws/Bedrock/

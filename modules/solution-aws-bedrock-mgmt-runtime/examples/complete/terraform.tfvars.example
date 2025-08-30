@@ -1,0 +1,105 @@
+# Example terraform.tfvars file for Bedrock management runtime deployment
+# Copy this file to terraform.tfvars and customize the values for your environment
+
+# Required variables - must be provided
+vpc_id     = "vpc-0123456789abcdef0"  # Replace with your VPC ID
+subnet_ids = [
+  "subnet-0123456789abcdef0",         # Replace with your subnet IDs
+  "subnet-0fedcba9876543210"
+]
+
+# Environment configuration
+environment  = "dev"
+project_name = "bedrock-mgmt"
+region       = "us-east-1"
+
+# Security configuration
+allowed_principals = [
+  "arn:aws:iam::123456789012:root",   # Replace with your AWS account ID
+  "arn:aws:iam::123456789012:role/BedrockUserRole"
+]
+
+# Feature toggles
+enable_guardrails                = true
+enable_model_invocation_logging  = true
+enable_cloudtrail_logging        = true
+
+# Compliance settings
+data_residency_region = "us-east-1"
+compliance_framework  = "SOC2"
+retention_days        = 90
+
+# Resource tags
+tags = {
+  "Terraform"     = "true"
+  "Environment"   = "dev"
+  "Project"       = "bedrock-mgmt-runtime"
+  "Owner"         = "Platform Team"
+  "CostCenter"    = "Engineering"
+  "Compliance"    = "SOC2"
+  "DataClass"     = "Confidential"
+}
+
+# ========================================
+# EXTENDED MONITORING CONFIGURATION
+# ========================================
+
+# Enable/disable specific monitoring components
+enable_agents_monitoring                  = true
+enable_knowledge_base_monitoring         = true
+enable_guardrails_monitoring             = true
+enable_training_monitoring               = true
+enable_api_call_monitoring               = true
+enable_comprehensive_health_monitoring   = true
+
+# Alerting thresholds for different services
+agents_error_threshold           = 5      # Errors per evaluation period
+kb_error_threshold              = 5      # Knowledge Base errors per evaluation period
+agents_throttle_threshold       = 10     # Agent throttles per evaluation period
+kb_throttle_threshold          = 10     # KB throttles per evaluation period
+agents_latency_threshold_ms    = 15000  # 15 seconds
+kb_latency_threshold_ms        = 5000   # 5 seconds
+guardrails_blocked_threshold   = 50     # Blocked requests per evaluation period
+training_job_failure_threshold = 0      # Zero tolerance for training failures
+
+# SNS alerting subscriptions (customize for your notification preferences)
+critical_alert_subscriptions = {
+  "ops-team-email" = {
+    protocol = "email"
+    endpoint = "ops-team@company.com"  # Replace with your email
+  }
+  # Uncomment to add SMS alerts
+  # "ops-team-sms" = {
+  #   protocol = "sms"
+  #   endpoint = "+1234567890"  # Replace with your phone number
+  # }
+}
+
+performance_alert_subscriptions = {
+  "performance-team-email" = {
+    protocol = "email"
+    endpoint = "performance-team@company.com"  # Replace with your email
+  }
+}
+
+cost_alert_subscriptions = {
+  "finops-team-email" = {
+    protocol = "email"
+    endpoint = "finops-team@company.com"  # Replace with your email
+  }
+}
+
+# Advanced alarm settings
+alarm_evaluation_periods = 2
+alarm_datapoints_to_alarm = 2
+alarm_period = 300  # 5 minutes
+
+# Anomaly detection settings
+enable_anomaly_detection = true
+anomaly_threshold = 2
+token_anomaly_threshold = 2
+
+# Maintenance window configuration (optional)
+# maintenance_window_alarm_arn = "arn:aws:cloudwatch:us-east-1:123456789012:alarm:maintenance-window"
+# maintenance_suppression_extension_period = 300
+# maintenance_suppression_wait_period = 300

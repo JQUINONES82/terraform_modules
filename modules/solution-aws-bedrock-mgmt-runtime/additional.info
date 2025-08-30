@@ -1,0 +1,36 @@
+vpc
+vpc-0123456789abcdef
+
+subnet
+snet-0123456789a
+snet-0123456789b
+
+create security groups for each endpoint
+
+create bedrock guardrails
+naming: guardails-<account>-<region_suffix>-<env>
+
+create cloudwatch log group: clw-log-<account>-<region_suffix>-<env>
+
+deploy all endpoints for all bedrock instances
+
+mgmt. sg should only allow 10.20.0.0/8 on port 443
+bedrock runtime should only allow 10.30.0.0/16 and 10.40.0.0/16
+two other services should be limited to vpc address rnage on port 443
+
+
+each endpoint should have a vpc endpoint policy which would be read a variable and then if we need to inject terraform objects to it, we will use a local or template file
+bedrock run time should be limited to role JQ-12345678-Bedrock in the account
+we need to allow arn:aws:bedrock:us-east-1::found-model/*
+we need to allow arn:aws:bedrock:us-east-2::found-model/*
+we need to allow arn:aws:bedrock:us-west-2::found-model/*
+we need to allow arn:aws:bedrock:us-west-2:{my aws partition id}:found-model/*
+
+limit to the vpc endpoint and vpc
+
+allow bedrock:*
+
+we should have an s3 logging bucket with kms 
+the cloud logs should use kms
+bedrock logging should use the role to upload to s3 and logs should use kms 
+guardrail should mask PII data

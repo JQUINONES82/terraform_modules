@@ -1,0 +1,48 @@
+# Example terraform.tfvars for complete budget configuration
+# Copy this file to terraform.tfvars and customize the values
+
+# AWS Configuration
+aws_region  = "us-east-1"
+environment = "prod"
+
+# Budget Limits (in USD)
+total_budget_limit       = "10000"   # Total monthly account budget
+ai_services_budget_limit = "2000"    # AI/ML services including Bedrock
+compute_budget_limit     = "4000"    # EC2, ECS, Lambda, Fargate
+storage_budget_limit     = "1000"    # S3, EBS, EFS
+database_budget_limit    = "1500"    # RDS, DynamoDB, ElastiCache
+dev_environment_limit    = "500"     # Development environments
+prod_environment_limit   = "7000"    # Production environments
+ec2_usage_hours_limit    = "2000"    # EC2 instance hours per month
+
+# Notification Configuration
+notification_email   = "ops-team@yourcompany.com"      # Primary operations contact
+finance_email        = "finance@yourcompany.com"       # Finance team contact
+ai_team_email        = "ai-ml-team@yourcompany.com"    # AI/ML team contact
+ops_team_email       = "ops-team@yourcompany.com"      # Operations team
+storage_team_email   = "storage@yourcompany.com"       # Storage team
+database_team_email  = "dba@yourcompany.com"           # Database administrators
+dev_team_email       = "developers@yourcompany.com"    # Development team
+
+# Anomaly Detection
+anomaly_threshold = 300  # Alert on cost anomalies above $300
+
+# Regional Configuration
+allowed_regions = [
+  "us-east-1",    # Primary region
+  "us-west-2",    # Secondary region
+  "eu-west-1"     # European region
+]
+
+# Tagging Strategy
+tags = {
+  Terraform     = "true"
+  Module        = "aws-budget"
+  Environment   = "production"
+  Owner         = "finance-team"
+  Project       = "cost-management"
+  Department    = "Engineering"
+  CostCenter    = "CC-1001"
+  BusinessUnit  = "Platform"
+  Compliance    = "SOC2"
+}
