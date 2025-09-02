@@ -687,3 +687,260 @@ variable "training_alarm_period" {
     error_message = "Training alarm period must be at least 300 seconds and be a multiple of 60."
   }
 }
+
+# ===================================================================
+# BUDGET MONITORING AND COST ALERTING
+# ===================================================================
+
+# Budget Control
+variable "enable_budget_monitoring" {
+  description = "Enable AWS Budget monitoring for Bedrock services"
+  type        = bool
+  default     = true
+}
+
+variable "enable_token_budget_monitoring" {
+  description = "Enable separate budget monitoring for token usage"
+  type        = bool
+  default     = true
+}
+
+# Budget Configuration
+variable "bedrock_monthly_budget_limit" {
+  description = "Monthly budget limit for Bedrock services in USD"
+  type        = string
+  default     = "1000"
+  
+  validation {
+    condition     = can(tonumber(var.bedrock_monthly_budget_limit)) && tonumber(var.bedrock_monthly_budget_limit) > 0
+    error_message = "Budget limit must be a positive number."
+  }
+}
+
+variable "token_monthly_budget_limit" {
+  description = "Monthly budget limit for token usage"
+  type        = string
+  default     = "1000000"
+}
+
+# Budget Alert Email Configuration
+variable "budget_notification_email" {
+  description = "Primary email address for budget notifications"
+  type        = string
+  default     = "jq@aol.com"
+  
+  validation {
+    condition     = can(regex("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$", var.budget_notification_email))
+    error_message = "Budget notification email must be a valid email address."
+  }
+}
+
+variable "budget_notification_emails" {
+  description = "List of email addresses for budget notifications"
+  type        = list(string)
+  default     = ["jq@aol.com"]
+  
+  validation {
+    condition = alltrue([
+      for email in var.budget_notification_emails : can(regex("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$", email))
+    ])
+    error_message = "All budget notification emails must be valid email addresses."
+  }
+}
+
+# Budget Threshold Configuration
+variable "budget_warning_threshold" {
+  description = "Warning threshold percentage for budget alerts (0-100)"
+  type        = number
+  default     = 50
+  
+  validation {
+    condition     = var.budget_warning_threshold >= 0 && var.budget_warning_threshold <= 100
+    error_message = "Budget warning threshold must be between 0 and 100."
+  }
+}
+
+variable "budget_critical_threshold" {
+  description = "Critical threshold percentage for budget alerts (0-100)"
+  type        = number
+  default     = 80
+  
+  validation {
+    condition     = var.budget_critical_threshold >= 0 && var.budget_critical_threshold <= 100
+    error_message = "Budget critical threshold must be between 0 and 100."
+  }
+}
+
+variable "budget_forecast_threshold" {
+  description = "Forecasted threshold percentage for budget alerts (0-200)"
+  type        = number
+  default     = 100
+  
+  validation {
+    condition     = var.budget_forecast_threshold >= 0 && var.budget_forecast_threshold <= 200
+    error_message = "Budget forecast threshold must be between 0 and 200."
+  }
+}
+
+# Budget Alert Routing
+variable "budget_warning_emails" {
+  description = "Email addresses for budget warning alerts"
+  type        = list(string)
+  default     = ["jq@aol.com"]
+  
+  validation {
+    condition = alltrue([
+      for email in var.budget_warning_emails : can(regex("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$", email))
+    ])
+    error_message = "All budget warning emails must be valid email addresses."
+  }
+}
+
+variable "budget_critical_emails" {
+  description = "Email addresses for budget critical alerts"
+  type        = list(string)
+  default     = ["jq@aol.com"]
+  
+  validation {
+    condition = alltrue([
+      for email in var.budget_critical_emails : can(regex("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$", email))
+    ])
+    error_message = "All budget critical emails must be valid email addresses."
+  }
+}
+
+variable "budget_forecast_emails" {
+  description = "Email addresses for budget forecast alerts"
+  type        = list(string)
+  default     = ["jq@aol.com"]
+  
+  validation {
+    condition = alltrue([
+      for email in var.budget_forecast_emails : can(regex("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$", email))
+    ])
+    error_message = "All budget forecast emails must be valid email addresses."
+  }
+}
+
+# Token Budget Configuration
+variable "token_budget_threshold" {
+  description = "Token budget alert threshold percentage"
+  type        = number
+  default     = 80
+  
+  validation {
+    condition     = var.token_budget_threshold >= 0 && var.token_budget_threshold <= 100
+    error_message = "Token budget threshold must be between 0 and 100."
+  }
+}
+
+variable "token_budget_emails" {
+  description = "Email addresses for token budget alerts"
+  type        = list(string)
+  default     = ["jq@aol.com"]
+  
+  validation {
+    condition = alltrue([
+      for email in var.token_budget_emails : can(regex("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$", email))
+    ])
+    error_message = "All token budget emails must be valid email addresses."
+  }
+}
+
+# Advanced Budget Configuration
+variable "include_related_ai_services" {
+  description = "Include related AI services (SageMaker, Comprehend, etc.) in budget monitoring"
+  type        = bool
+  default     = false
+}
+
+variable "budget_cost_filter_tags" {
+  description = "Tag-based cost filters for budget monitoring"
+  type        = map(list(string))
+  default     = {}
+}
+
+# Budget Anomaly Detection
+variable "enable_budget_anomaly_detection" {
+  description = "Enable anomaly detection for budget monitoring"
+  type        = bool
+  default     = true
+}
+
+variable "budget_anomaly_threshold" {
+  description = "Dollar threshold for budget anomaly detection"
+  type        = number
+  default     = 100
+  
+  validation {
+    condition     = var.budget_anomaly_threshold >= 0
+    error_message = "Budget anomaly threshold must be non-negative."
+  }
+}
+
+variable "budget_anomaly_frequency" {
+  description = "Frequency for budget anomaly notifications (DAILY, IMMEDIATE, WEEKLY)"
+  type        = string
+  default     = "DAILY"
+  
+  validation {
+    condition     = contains(["DAILY", "IMMEDIATE", "WEEKLY"], var.budget_anomaly_frequency)
+    error_message = "Budget anomaly frequency must be DAILY, IMMEDIATE, or WEEKLY."
+  }
+}
+
+variable "budget_anomaly_emails" {
+  description = "Email addresses for budget anomaly alerts"
+  type        = list(string)
+  default     = ["jq@aol.com"]
+  
+  validation {
+    condition = alltrue([
+      for email in var.budget_anomaly_emails : can(regex("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$", email))
+    ])
+    error_message = "All budget anomaly emails must be valid email addresses."
+  }
+}
+
+# Budget Auto-Adjustment
+variable "budget_auto_adjust_type" {
+  description = "Type of budget auto-adjustment (HISTORICAL, FORECAST, or null to disable)"
+  type        = string
+  default     = null
+  
+  validation {
+    condition = var.budget_auto_adjust_type == null || contains([
+      "HISTORICAL", "FORECAST"
+    ], var.budget_auto_adjust_type)
+    error_message = "Budget auto-adjust type must be HISTORICAL, FORECAST, or null."
+  }
+}
+
+variable "budget_historical_adjustment_period" {
+  description = "Number of budget periods for historical adjustments (1-60)"
+  type        = number
+  default     = 6
+  
+  validation {
+    condition     = var.budget_historical_adjustment_period >= 1 && var.budget_historical_adjustment_period <= 60
+    error_message = "Budget historical adjustment period must be between 1 and 60."
+  }
+}
+
+# Token Anomaly Detection
+variable "enable_token_anomaly_detection" {
+  description = "Enable anomaly detection for token usage monitoring"
+  type        = bool
+  default     = true
+}
+
+variable "token_anomaly_threshold_value" {
+  description = "Token usage anomaly threshold"
+  type        = number
+  default     = 1000
+  
+  validation {
+    condition     = var.token_anomaly_threshold_value >= 0
+    error_message = "Token anomaly threshold must be non-negative."
+  }
+}

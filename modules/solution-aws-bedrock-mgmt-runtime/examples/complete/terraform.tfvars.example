@@ -103,3 +103,53 @@ token_anomaly_threshold = 2
 # maintenance_window_alarm_arn = "arn:aws:cloudwatch:us-east-1:123456789012:alarm:maintenance-window"
 # maintenance_suppression_extension_period = 300
 # maintenance_suppression_wait_period = 300
+
+# ========================================
+# BUDGET MONITORING CONFIGURATION
+# ========================================
+
+# Budget control
+enable_budget_monitoring       = true
+enable_token_budget_monitoring = true
+
+# Budget limits
+bedrock_monthly_budget_limit = "1000"    # Monthly cost budget in USD
+token_monthly_budget_limit   = "1000000" # Monthly token usage limit
+
+# Primary notification email (replace with your email)
+budget_notification_email = "jq@aol.com"
+
+# Multiple notification emails for different alert types
+budget_notification_emails = ["jq@aol.com"]
+budget_warning_emails     = ["jq@aol.com"]                    # 50% threshold alerts
+budget_critical_emails    = ["jq@aol.com", "admin@company.com"] # 80% threshold alerts  
+budget_forecast_emails    = ["jq@aol.com", "finance@company.com"] # 100% forecast alerts
+
+# Budget thresholds (percentages)
+budget_warning_threshold  = 50   # Early warning at 50%
+budget_critical_threshold = 80   # Critical alert at 80%
+budget_forecast_threshold = 100  # Forecast alert at 100%
+
+# Token budget configuration
+token_budget_threshold = 80
+token_budget_emails   = ["jq@aol.com"]
+
+# Anomaly detection
+enable_budget_anomaly_detection  = true
+budget_anomaly_threshold        = 100   # Dollar threshold for anomalies
+budget_anomaly_frequency        = "DAILY" # DAILY, IMMEDIATE, or WEEKLY
+budget_anomaly_emails           = ["jq@aol.com"]
+
+enable_token_anomaly_detection  = true
+token_anomaly_threshold_value   = 1000  # Token threshold for anomalies
+
+# Advanced budget settings
+include_related_ai_services         = false  # Include SageMaker, Comprehend, etc.
+budget_auto_adjust_type            = null    # HISTORICAL, FORECAST, or null
+budget_historical_adjustment_period = 6      # Number of periods for historical adjustment
+
+# Budget cost filters (optional - filter by tags)
+budget_cost_filter_tags = {
+  # Environment = ["production", "staging"]
+  # Team        = ["ai-team"]
+}

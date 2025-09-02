@@ -215,6 +215,64 @@ output "network_segmentation_implemented" {
   value       = true
 }
 
+# ===================================================================
+# BUDGET AND COST MONITORING OUTPUTS
+# ===================================================================
+
+# Budget Outputs
+output "bedrock_cost_budget_arn" {
+  description = "ARN of the Bedrock cost budget"
+  value       = var.enable_budget_monitoring && length(module.bedrock_cost_budget) > 0 ? module.bedrock_cost_budget[0].budget_arn : null
+}
+
+output "bedrock_cost_budget_id" {
+  description = "ID of the Bedrock cost budget"
+  value       = var.enable_budget_monitoring && length(module.bedrock_cost_budget) > 0 ? module.bedrock_cost_budget[0].budget_id : null
+}
+
+output "bedrock_cost_budget_name" {
+  description = "Name of the Bedrock cost budget"
+  value       = var.enable_budget_monitoring && length(module.bedrock_cost_budget) > 0 ? module.bedrock_cost_budget[0].budget_name : null
+}
+
+output "bedrock_token_budget_arn" {
+  description = "ARN of the Bedrock token usage budget"
+  value       = var.enable_token_budget_monitoring && length(module.bedrock_token_budget) > 0 ? module.bedrock_token_budget[0].budget_arn : null
+}
+
+output "bedrock_token_budget_id" {
+  description = "ID of the Bedrock token usage budget"
+  value       = var.enable_token_budget_monitoring && length(module.bedrock_token_budget) > 0 ? module.bedrock_token_budget[0].budget_id : null
+}
+
+# Anomaly Detection Outputs
+output "bedrock_cost_anomaly_detector_arn" {
+  description = "ARN of the Bedrock cost anomaly detector"
+  value       = var.enable_budget_monitoring && var.enable_budget_anomaly_detection && length(module.bedrock_cost_budget) > 0 ? module.bedrock_cost_budget[0].anomaly_detector_arn : null
+}
+
+output "bedrock_token_anomaly_detector_arn" {
+  description = "ARN of the Bedrock token anomaly detector"
+  value       = var.enable_token_budget_monitoring && var.enable_token_anomaly_detection && length(module.bedrock_token_budget) > 0 ? module.bedrock_token_budget[0].anomaly_detector_arn : null
+}
+
+# Budget Configuration Summary
+output "budget_configuration_summary" {
+  description = "Summary of budget configuration"
+  value = {
+    cost_budget_enabled       = var.enable_budget_monitoring
+    token_budget_enabled      = var.enable_token_budget_monitoring
+    cost_budget_limit         = var.bedrock_monthly_budget_limit
+    token_budget_limit        = var.token_monthly_budget_limit
+    warning_threshold         = var.budget_warning_threshold
+    critical_threshold        = var.budget_critical_threshold
+    forecast_threshold        = var.budget_forecast_threshold
+    anomaly_detection_enabled = var.enable_budget_anomaly_detection
+    notification_emails       = var.budget_notification_emails
+    auto_adjust_enabled       = var.budget_auto_adjust_type != null
+  }
+}
+
 # Summary output for easy reference
 output "solution_summary" {
   description = "Summary of the deployed Bedrock solution"
